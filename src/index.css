@@ -1,0 +1,40 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --gold: #c9a96e;
+  --gold-light: #e8d5b0;
+  --gold-dim: rgba(201, 169, 110, 0.15);
+  --bg: #0c0b09;
+  --bg2: #141210;
+  --bg3: #1c1916;
+  --text: #f5f0e8;
+  --text-muted: #8a8278;
+  --border: rgba(201, 169, 110, 0.2);
+  --danger: #e07070;
+  --danger-bg: rgba(224, 112, 112, 0.08);
+  --radius: 4px;
+  --font-display: 'Geist', sans-serif;
+  --font-body: 'Inter', sans-serif;
+}
+
+html { font-size: 16px; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+}
+
+input, button, textarea, select {
+  font-family: var(--font-body);
+}
