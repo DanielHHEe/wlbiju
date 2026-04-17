@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
-import axios from 'axios'
+import api from '../services/api'
 import { useAuth } from '../context/AuthContext'
 
 export default function Login() {
@@ -16,7 +16,7 @@ export default function Login() {
     setLoading(true)
     setError('')
     try {
-      const { data } = await axios.post('http://localhost:3001/api/auth/login', form)
+      const { data } = await api.post('/auth/login', form)
       login(data.token, data.admin)
       navigate('/admin')
     } catch (err) {
@@ -145,7 +145,12 @@ export default function Login() {
           </button>
         </form>
 
-       
+        <p style={{ textAlign: 'center', marginTop: '1.5rem', fontSize: '13px', color: '#888' }}>
+          Sem conta?{' '}
+          <Link to="/register" style={{ color: '#111', fontWeight: 500, textDecoration: 'none', borderBottom: '1px solid #111' }}>
+            Criar conta
+          </Link>
+        </p>
       </div>
       <style>{`@keyframes fadeUp { from { opacity:0; transform:translateY(20px) } to { opacity:1; transform:translateY(0) } }`}</style>
     </div>
