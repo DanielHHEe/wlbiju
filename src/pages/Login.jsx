@@ -32,11 +32,12 @@ export default function Login() {
     background: '#fff',
     border: `1px solid ${focused === name ? '#111' : '#e8e8e8'}`,
     borderRadius: 'var(--radius)',
-    fontSize: '14px',
+    fontSize: '16px',
     color: '#111',
     outline: 'none',
     transition: 'border-color 0.2s',
     letterSpacing: '0.2px',
+    boxSizing: 'border-box',
   })
 
   return (
@@ -133,7 +134,7 @@ export default function Login() {
               background: loading ? '#f4f4f4' : '#111',
               color: loading ? '#888' : '#fff',
               border: 'none', borderRadius: 'var(--radius)',
-              fontSize: '12px', fontWeight: 500,
+              fontSize: '14px', fontWeight: 500,
               letterSpacing: '2px', textTransform: 'uppercase',
               cursor: loading ? 'not-allowed' : 'pointer',
               transition: 'all 0.2s',

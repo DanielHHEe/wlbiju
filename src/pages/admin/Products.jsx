@@ -108,7 +108,6 @@ export default function Products() {
     setImageFile(null)
     setEditId(p.id)
     setShowForm(true)
-    // Scroll to form on mobile
     setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 50)
   }
 
@@ -129,7 +128,7 @@ export default function Products() {
     background: '#fff',
     border: '1px solid #e8e8e8',
     borderRadius: '6px',
-    fontSize: '14px',
+    fontSize: '16px',
     color: '#111',
     outline: 'none',
     fontFamily: 'var(--font-body)',
@@ -146,23 +145,11 @@ export default function Products() {
         select option { background: #fff; color: #111; }
         .upload-area { border: 2px dashed #e8e8e8; border-radius: 8px; padding: 24px; text-align: center; cursor: pointer; transition: border-color 0.2s; display: block; }
         .upload-area:hover { border-color: #111; }
-
-        /* Product cards for mobile */
-        .product-card {
-          display: none;
-          background: #fff;
-          border: 1px solid #f0f0f0;
-          border-radius: 10px;
-          padding: 14px;
-          gap: 12px;
-        }
+        .product-card { display: none; background: #fff; border: 1px solid #f0f0f0; border-radius: 10px; padding: 14px; gap: 12px; }
         .product-table { display: block; }
-
         @media (max-width: 640px) {
           .product-table { display: none !important; }
           .product-card { display: flex !important; }
-          .form-grid-3 { grid-template-columns: 1fr 1fr !important; }
-          .form-grid-price-stock { grid-template-columns: 1fr 1fr !important; }
           .form-actions { flex-direction: column !important; }
           .form-actions button { width: 100% !important; justify-content: center !important; }
           .page-header { flex-direction: column !important; align-items: flex-start !important; gap: 14px !important; }
@@ -209,7 +196,6 @@ export default function Products() {
         document.body
       )}
 
-      {/* Header */}
       <div className="page-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '32px', flexWrap: 'wrap', gap: '12px' }}>
         <div>
           <p style={{ fontSize: '13px', color: '#aaa', marginBottom: '4px' }}>Gerenciamento</p>
@@ -240,26 +226,18 @@ export default function Products() {
         </div>
       )}
 
-      {/* Form */}
       {showForm && (
         <div style={{ background: '#fff', border: '1px solid #e8e8e8', borderRadius: '8px', padding: '20px', marginBottom: '24px' }}>
           <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '20px', fontWeight: 400, color: '#111', margin: '0 0 20px' }}>
             {editId ? 'Editar produto' : 'Novo produto'}
           </h2>
           <form onSubmit={handleSubmit}>
-
-            {/* Nome (full width) */}
             <div style={{ marginBottom: '14px' }}>
               <label style={{ display: 'block', fontSize: '11px', letterSpacing: '1px', color: '#aaa', textTransform: 'uppercase', marginBottom: '8px' }}>Nome</label>
-              <input
-                type="text" value={form.name}
-                onChange={e => setForm({ ...form, name: e.target.value })}
-                placeholder="Ex: Colar Dourado" required style={inputStyle}
-              />
+              <input type="text" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} placeholder="Ex: Colar Dourado" required style={inputStyle} />
             </div>
 
-            {/* Preço + Estoque lado a lado */}
-            <div className="form-grid-price-stock" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '14px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '14px' }}>
               <div>
                 <label style={{ display: 'block', fontSize: '11px', letterSpacing: '1px', color: '#aaa', textTransform: 'uppercase', marginBottom: '8px' }}>Preço (R$)</label>
                 <input type="number" value={form.price} onChange={e => setForm({ ...form, price: e.target.value })} placeholder="0.00" required style={inputStyle} step="0.01" min="0" />
@@ -270,7 +248,6 @@ export default function Products() {
               </div>
             </div>
 
-            {/* Categoria (full width) */}
             <div style={{ marginBottom: '14px' }}>
               <label style={{ display: 'block', fontSize: '11px', letterSpacing: '1px', color: '#aaa', textTransform: 'uppercase', marginBottom: '8px' }}>Categoria</label>
               <select value={form.category} onChange={e => setForm({ ...form, category: e.target.value })} required style={{ ...inputStyle, cursor: 'pointer' }}>
@@ -279,13 +256,11 @@ export default function Products() {
               </select>
             </div>
 
-            {/* Descrição */}
             <div style={{ marginBottom: '14px' }}>
               <label style={{ display: 'block', fontSize: '11px', letterSpacing: '1px', color: '#aaa', textTransform: 'uppercase', marginBottom: '8px' }}>Descrição</label>
               <textarea value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} placeholder="Descreva o produto..." rows={3} style={{ ...inputStyle, resize: 'vertical' }} />
             </div>
 
-            {/* Imagem */}
             <div style={{ marginBottom: '20px' }}>
               <label style={{ display: 'block', fontSize: '11px', letterSpacing: '1px', color: '#aaa', textTransform: 'uppercase', marginBottom: '8px' }}>Imagem do produto</label>
               <label className="upload-area" htmlFor="image-upload">
@@ -307,31 +282,11 @@ export default function Products() {
               </label>
             </div>
 
-            {/* Botões */}
             <div className="form-actions" style={{ display: 'flex', gap: '12px' }}>
-              <button
-                type="submit" disabled={loading || uploading}
-                style={{
-                  flex: 1, padding: '12px 24px',
-                  background: loading || uploading ? '#aaa' : '#111',
-                  color: '#fff', border: 'none', borderRadius: '6px',
-                  fontSize: '12px', fontWeight: 500, letterSpacing: '1.5px',
-                  textTransform: 'uppercase', cursor: loading || uploading ? 'not-allowed' : 'pointer',
-                  fontFamily: 'var(--font-body)',
-                }}
-              >
+              <button type="submit" disabled={loading || uploading} style={{ flex: 1, padding: '12px 24px', background: loading || uploading ? '#aaa' : '#111', color: '#fff', border: 'none', borderRadius: '6px', fontSize: '12px', fontWeight: 500, letterSpacing: '1.5px', textTransform: 'uppercase', cursor: loading || uploading ? 'not-allowed' : 'pointer', fontFamily: 'var(--font-body)' }}>
                 {uploading ? 'Enviando imagem...' : loading ? 'Salvando...' : editId ? 'Salvar' : 'Adicionar'}
               </button>
-              <button
-                type="button"
-                onClick={() => { setShowForm(false); setForm(empty); setEditId(null); setImagePreview(null); setImageFile(null) }}
-                style={{
-                  flex: 1, padding: '12px 24px', background: 'transparent',
-                  color: '#888', border: '1px solid #e8e8e8', borderRadius: '6px',
-                  fontSize: '12px', letterSpacing: '1.5px', textTransform: 'uppercase',
-                  cursor: 'pointer', fontFamily: 'var(--font-body)',
-                }}
-              >
+              <button type="button" onClick={() => { setShowForm(false); setForm(empty); setEditId(null); setImagePreview(null); setImageFile(null) }} style={{ flex: 1, padding: '12px 24px', background: 'transparent', color: '#888', border: '1px solid #e8e8e8', borderRadius: '6px', fontSize: '12px', letterSpacing: '1.5px', textTransform: 'uppercase', cursor: 'pointer', fontFamily: 'var(--font-body)' }}>
                 Cancelar
               </button>
             </div>
@@ -339,7 +294,6 @@ export default function Products() {
         </div>
       )}
 
-      {/* Lista de produtos */}
       <div style={{ background: '#fff', border: '1px solid #e8e8e8', borderRadius: '8px', overflow: 'hidden' }}>
         {fetching ? (
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '64px 0' }}>
@@ -355,7 +309,6 @@ export default function Products() {
           </div>
         ) : (
           <>
-            {/* ── TABELA — desktop ── */}
             <div className="product-table" style={{ overflowX: 'auto' }}>
               <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px' }}>
                 <thead>
@@ -405,19 +358,9 @@ export default function Products() {
               </table>
             </div>
 
-            {/* ── CARDS — mobile ── */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
               {products.map((p, i) => (
-                <div
-                  key={p.id}
-                  className="product-card"
-                  style={{
-                    borderBottom: i < products.length - 1 ? '1px solid #f0f0f0' : 'none',
-                    borderRadius: 0,
-                    padding: '14px 16px',
-                  }}
-                >
-                  {/* Imagem */}
+                <div key={p.id} className="product-card" style={{ borderBottom: i < products.length - 1 ? '1px solid #f0f0f0' : 'none', borderRadius: 0, padding: '14px 16px' }}>
                   {p.imageUrl ? (
                     <img src={p.imageUrl} alt={p.name} onClick={() => setModalImg(p.imageUrl)}
                       style={{ width: '52px', height: '52px', objectFit: 'cover', borderRadius: '8px', border: '1px solid #e8e8e8', cursor: 'zoom-in', flexShrink: 0 }} />
@@ -428,8 +371,6 @@ export default function Products() {
                       </svg>
                     </div>
                   )}
-
-                  {/* Info */}
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '8px', marginBottom: '4px' }}>
                       <p style={{ fontSize: '14px', fontWeight: 500, color: '#111', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p.name}</p>
@@ -437,17 +378,11 @@ export default function Products() {
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
                       <span style={{ fontSize: '11px', padding: '2px 8px', background: '#f4f4f4', color: '#555', borderRadius: '20px' }}>{p.category}</span>
-                      <span style={{ fontSize: '12px', fontWeight: 500, color: p.stock < 5 ? '#e53e3e' : p.stock < 10 ? '#f59e0b' : '#22c55e' }}>
-                        {p.stock} un.
-                      </span>
+                      <span style={{ fontSize: '12px', fontWeight: 500, color: p.stock < 5 ? '#e53e3e' : p.stock < 10 ? '#f59e0b' : '#22c55e' }}>{p.stock} un.</span>
                     </div>
                     <div style={{ display: 'flex', gap: '8px' }}>
-                      <button onClick={() => handleEdit(p)} style={{ flex: 1, padding: '7px', background: '#fff', border: '1px solid #e8e8e8', borderRadius: '6px', color: '#555', fontSize: '12px', cursor: 'pointer', fontFamily: 'var(--font-body)' }}>
-                        Editar
-                      </button>
-                      <button onClick={() => handleDelete(p.id)} style={{ flex: 1, padding: '7px', background: '#fff', border: '1px solid rgba(229,62,62,0.3)', borderRadius: '6px', color: '#e53e3e', fontSize: '12px', cursor: 'pointer', fontFamily: 'var(--font-body)' }}>
-                        Excluir
-                      </button>
+                      <button onClick={() => handleEdit(p)} style={{ flex: 1, padding: '7px', background: '#fff', border: '1px solid #e8e8e8', borderRadius: '6px', color: '#555', fontSize: '12px', cursor: 'pointer', fontFamily: 'var(--font-body)' }}>Editar</button>
+                      <button onClick={() => handleDelete(p.id)} style={{ flex: 1, padding: '7px', background: '#fff', border: '1px solid rgba(229,62,62,0.3)', borderRadius: '6px', color: '#e53e3e', fontSize: '12px', cursor: 'pointer', fontFamily: 'var(--font-body)' }}>Excluir</button>
                     </div>
                   </div>
                 </div>

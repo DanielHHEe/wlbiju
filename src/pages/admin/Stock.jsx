@@ -45,134 +45,25 @@ export default function Stock() {
       <style>{`
         @keyframes fadeUp { from { opacity:0; transform:translateY(16px) } to { opacity:1; transform:translateY(0) } }
         input[type="number"]:focus { border-color: #111 !important; }
-
-        .stock-stats-grid {
-          display: grid;
-          grid-template-columns: repeat(2, 1fr);
-          gap: 12px;
-          margin-bottom: 24px;
-        }
-
-        @media (min-width: 640px) {
-          .stock-stats-grid {
-            grid-template-columns: repeat(4, 1fr);
-            gap: 16px;
-          }
-        }
-
-        .stock-table-wrapper {
-          overflow-x: auto;
-          -webkit-overflow-scrolling: touch;
-        }
-
-        .stock-table {
-          width: 100%;
-          border-collapse: collapse;
-          font-size: 14px;
-          min-width: 480px;
-        }
-
-        .stock-card-list {
-          display: none;
-        }
-
+        .stock-stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 24px; }
+        @media (min-width: 640px) { .stock-stats-grid { grid-template-columns: repeat(4, 1fr); gap: 16px; } }
+        .stock-table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        .stock-table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 480px; }
+        .stock-card-list { display: none; }
         @media (max-width: 540px) {
-          .stock-table-wrapper {
-            display: none;
-          }
-          .stock-card-list {
-            display: flex;
-            flex-direction: column;
-            gap: 0;
-          }
+          .stock-table-wrapper { display: none; }
+          .stock-card-list { display: flex; flex-direction: column; gap: 0; }
         }
-
-        .stock-product-card {
-          padding: 16px 20px;
-          border-bottom: 1px solid #f4f4f4;
-          display: flex;
-          flex-direction: column;
-          gap: 10px;
-        }
-
-        .stock-product-card:last-child {
-          border-bottom: none;
-        }
-
-        .stock-product-card-row {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          gap: 8px;
-        }
-
-        .stock-edit-row {
-          display: flex;
-          gap: 8px;
-          align-items: center;
-          flex-wrap: wrap;
-        }
-
-        .stock-edit-row input {
-          width: 80px;
-          padding: 6px 10px;
-          border: 1px solid #e8e8e8;
-          border-radius: 4px;
-          font-size: 14px;
-          color: #111;
-          outline: none;
-          font-family: var(--font-body);
-        }
-
-        .btn-save {
-          padding: 6px 14px;
-          background: #111;
-          color: #fff;
-          border: none;
-          border-radius: 4px;
-          font-size: 12px;
-          cursor: pointer;
-          font-family: var(--font-body);
-        }
-
-        .btn-cancel {
-          padding: 6px 14px;
-          background: #fff;
-          color: #888;
-          border: 1px solid #e8e8e8;
-          border-radius: 4px;
-          font-size: 12px;
-          cursor: pointer;
-          font-family: var(--font-body);
-        }
-
-        .btn-ajustar {
-          padding: 5px 14px;
-          background: #fff;
-          border: 1px solid #e8e8e8;
-          border-radius: 4px;
-          color: #555;
-          font-size: 12px;
-          cursor: pointer;
-          font-family: var(--font-body);
-        }
-
-        .status-badge {
-          font-size: 11px;
-          padding: 3px 10px;
-          border-radius: 20px;
-          font-weight: 500;
-          white-space: nowrap;
-        }
-
-        .category-badge {
-          font-size: 11px;
-          padding: 3px 10px;
-          background: #f4f4f4;
-          color: #555;
-          border-radius: 20px;
-          white-space: nowrap;
-        }
+        .stock-product-card { padding: 16px 20px; border-bottom: 1px solid #f4f4f4; display: flex; flex-direction: column; gap: 10px; }
+        .stock-product-card:last-child { border-bottom: none; }
+        .stock-product-card-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+        .stock-edit-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+        .stock-edit-row input { width: 80px; padding: 8px 10px; border: 1px solid #e8e8e8; border-radius: 4px; font-size: 16px; color: #111; outline: none; font-family: var(--font-body); }
+        .btn-save { padding: 8px 14px; background: #111; color: #fff; border: none; border-radius: 4px; font-size: 12px; cursor: pointer; font-family: var(--font-body); }
+        .btn-cancel { padding: 8px 14px; background: #fff; color: #888; border: 1px solid #e8e8e8; border-radius: 4px; font-size: 12px; cursor: pointer; font-family: var(--font-body); }
+        .btn-ajustar { padding: 7px 14px; background: #fff; border: 1px solid #e8e8e8; border-radius: 4px; color: #555; font-size: 12px; cursor: pointer; font-family: var(--font-body); }
+        .status-badge { font-size: 11px; padding: 3px 10px; border-radius: 20px; font-weight: 500; white-space: nowrap; }
+        .category-badge { font-size: 11px; padding: 3px 10px; background: #f4f4f4; color: #555; border-radius: 20px; white-space: nowrap; }
       `}</style>
 
       <div style={{ marginBottom: '32px' }}>
@@ -221,7 +112,6 @@ export default function Stock() {
           </div>
         ) : (
           <>
-            {/* Tabela — visível em telas >= 541px */}
             <div className="stock-table-wrapper">
               <table className="stock-table">
                 <thead>
@@ -242,20 +132,14 @@ export default function Stock() {
                         onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
                       >
                         <td style={{ padding: '14px 20px', color: '#111', fontWeight: 400 }}>{p.name}</td>
-                        <td style={{ padding: '14px 20px' }}>
-                          <span className="category-badge">{p.category}</span>
-                        </td>
-                        <td style={{ padding: '14px 20px', fontSize: '16px', fontWeight: 300, fontFamily: 'var(--font-display)', color: '#111', whiteSpace: 'nowrap' }}>
-                          {p.stock} un.
-                        </td>
-                        <td style={{ padding: '14px 20px' }}>
-                          <span className="status-badge" style={{ background: statusBg, color: statusColor }}>{statusLabel}</span>
-                        </td>
+                        <td style={{ padding: '14px 20px' }}><span className="category-badge">{p.category}</span></td>
+                        <td style={{ padding: '14px 20px', fontSize: '16px', fontWeight: 300, fontFamily: 'var(--font-display)', color: '#111', whiteSpace: 'nowrap' }}>{p.stock} un.</td>
+                        <td style={{ padding: '14px 20px' }}><span className="status-badge" style={{ background: statusBg, color: statusColor }}>{statusLabel}</span></td>
                         <td style={{ padding: '14px 20px' }}>
                           {editing === p.id ? (
                             <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                               <input type="number" min="0" value={newStock} onChange={e => setNewStock(e.target.value)}
-                                style={{ width: '80px', padding: '6px 10px', border: '1px solid #e8e8e8', borderRadius: '4px', fontSize: '14px', color: '#111', outline: 'none', fontFamily: 'var(--font-body)' }}
+                                style={{ width: '80px', padding: '8px 10px', border: '1px solid #e8e8e8', borderRadius: '4px', fontSize: '16px', color: '#111', outline: 'none', fontFamily: 'var(--font-body)' }}
                                 autoFocus />
                               <button className="btn-save" onClick={() => handleSaveStock(p.id)} disabled={saving}>{saving ? '...' : 'Salvar'}</button>
                               <button className="btn-cancel" onClick={() => { setEditing(null); setNewStock('') }}>Cancelar</button>
@@ -271,7 +155,6 @@ export default function Stock() {
               </table>
             </div>
 
-            {/* Cards — visível apenas em mobile (< 541px) */}
             <div className="stock-card-list">
               {products.map(p => {
                 const statusColor = p.stock < 5 ? '#e53e3e' : p.stock < 10 ? '#f59e0b' : '#22c55e'
