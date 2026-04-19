@@ -3,8 +3,11 @@ const { getAll, create, update, remove, updateStock } = require('../controllers/
 const authMiddleware = require('../middlewares/authMiddleware')
 const router = express.Router()
 
-router.use(authMiddleware)
+// Rota pública — loja do cliente
+router.get('/public', getAll)
 
+// Rotas protegidas — painel admin
+router.use(authMiddleware)
 router.get('/', getAll)
 router.post('/', create)
 router.put('/:id', update)
