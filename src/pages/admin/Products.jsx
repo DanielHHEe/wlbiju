@@ -5,7 +5,21 @@ import { supabase } from '../../services/supabase'
 import Toast from '../../components/Toast'
 
 const empty = { name: '', price: '', category: '', description: '', stock: '', imageUrl: '' }
-const categories = ['Colares', 'Brincos', 'Pulseiras', 'Anéis', 'Tornozeleiras', 'Conjuntos']
+const categories = [
+  'Colares',
+  'Brincos',
+  'Pulseiras',
+  'Anéis',
+  'Tornozeleiras',
+  'Conjuntos',
+  'Piercing Fake',
+  'Relógios',
+  'Bolsas',
+  'Cintos',
+  'Óculos',
+  'Linha Masculina',
+  'Perfumaria',
+]
 
 export default function Products() {
   const [products, setProducts] = useState([])
@@ -251,7 +265,7 @@ export default function Products() {
             <div style={{ marginBottom: '14px' }}>
               <label style={{ display: 'block', fontSize: '11px', letterSpacing: '1px', color: '#aaa', textTransform: 'uppercase', marginBottom: '8px' }}>Categoria</label>
               <select value={form.category} onChange={e => setForm({ ...form, category: e.target.value })} required style={{ ...inputStyle, cursor: 'pointer' }}>
-                <option value="">Selecionar</option>
+                <option value="">Selecionar categoria</option>
                 {categories.map(c => <option key={c} value={c}>{c}</option>)}
               </select>
             </div>
