@@ -25,3 +25,24 @@ model Product {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
+
+model Order {
+  id        String      @id @default(uuid())
+  items     OrderItem[]
+  total     Float
+  frete     Float?
+  status    String      @default("pending")
+  criadoEm DateTime    @default(now())
+}
+
+model OrderItem {
+  id       String  @id @default(uuid())
+  orderId  String
+  order    Order   @relation(fields: [orderId], references: [id])
+  name     String
+  category String
+  price    Float
+  qty      Int
+  imageUrl String?
+  subtotal Float
+}
