@@ -29,7 +29,7 @@ const create = async (req, res) => {
       data: {
         total,
         frete: frete ?? null,
-        status: 'pending',
+        status: 'completed', // já entra como Concluído
         items: {
           create: items.map(item => ({
             name: item.name,
@@ -56,7 +56,7 @@ const updateStatus = async (req, res) => {
     const { id } = req.params
     const { status } = req.body
 
-    const validStatus = ['pending', 'processing', 'completed', 'cancelled']
+    const validStatus = ['completed']
     if (!validStatus.includes(status)) {
       return res.status(400).json({ error: 'Status inválido' })
     }
@@ -74,4 +74,15 @@ const updateStatus = async (req, res) => {
   }
 }
 
-module.exports = { getAll, create, updateStatus }
+const clearAll = async (req, res) => {
+  try {
+    await prisma.orderItem.deleteMany({})
+    await prisma.order.deleteMany({})
+    res.json({ success: true })
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: 'Erro ao limpar pedidos' })
+  }
+}
+
+module.exports = { getAll, create, updateStatus, clearAll }

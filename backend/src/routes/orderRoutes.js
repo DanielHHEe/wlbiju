@@ -1,5 +1,5 @@
 const express = require('express')
-const { getAll, create, updateStatus } = require('../controllers/orderController')
+const { getAll, create, updateStatus, clearAll } = require('../controllers/orderController')
 const authMiddleware = require('../middlewares/authMiddleware')
 const router = express.Router()
 
@@ -10,5 +10,6 @@ router.post('/public', create)
 router.use(authMiddleware)
 router.get('/', getAll)
 router.patch('/:id', updateStatus)
+router.delete('/clear', clearAll)
 
 module.exports = router
