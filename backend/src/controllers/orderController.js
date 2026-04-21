@@ -4,9 +4,11 @@ const { PrismaPg } = require('@prisma/adapter-pg')
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL })
 const prisma = new PrismaClient({ adapter })
 
+// Listar pedidos NÃO arquivados (tela operacional)
 const getAll = async (req, res) => {
   try {
     const orders = await prisma.order.findMany({
+      where: { arquivado: false },
       include: { items: true },
       orderBy: { criadoEm: 'desc' },
     })
@@ -17,6 +19,7 @@ const getAll = async (req, res) => {
   }
 }
 
+// Criar pedido (rota pública)
 const create = async (req, res) => {
   try {
     const { items, total, frete } = req.body
@@ -29,7 +32,8 @@ const create = async (req, res) => {
       data: {
         total,
         frete: frete ?? null,
-        status: 'completed', // já entra como Concluído
+        status: 'completed',
+        arquivado: false,
         items: {
           create: items.map(item => ({
             name: item.name,
@@ -74,15 +78,74 @@ const updateStatus = async (req, res) => {
   }
 }
 
-const clearAll = async (req, res) => {
+// Arquivar um pedido específico
+const arquivarOne = async (req, res) => {
   try {
-    await prisma.orderItem.deleteMany({})
-    await prisma.order.deleteMany({})
-    res.json({ success: true })
+    const { id } = req.params
+    const order = await prisma.order.update({
+      where: { id },
+      data: { arquivado: true },
+    })
+    res.json(order)
   } catch (err) {
     console.error(err)
-    res.status(500).json({ error: 'Erro ao limpar pedidos' })
+    res.status(500).json({ error: 'Erro ao arquivar pedido' })
   }
 }
 
-module.exports = { getAll, create, updateStatus, clearAll }
+// Arquivar todos os pedidos
+const arquivarAll = async (req, res) => {
+  try {
+    await prisma.order.updateMany({
+      where: { arquivado: false },
+      data: { arquivado: true },
+    })
+    res.json({ success: true })
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: 'Erro ao arquivar pedidos' })
+  }
+}
+
+// Faturamento — busca TODOS (arquivados ou não)
+const getRevenue = async (req, res) => {
+  try {
+    const orders = await prisma.order.findMany({
+      where: { status: 'completed' },
+      include: { items: true },
+      orderBy: { criadoEm: 'asc' },
+    })
+
+    const byMonth = {}
+    orders.forEach(order => {
+      const date = new Date(order.criadoEm)
+      const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`
+      if (!byMonth[key]) byMonth[key] = { month: key, total: 0, count: 0 }
+      byMonth[key].total += order.total
+      byMonth[key].count += 1
+    })
+
+    const totalGeral = orders.reduce((acc, o) => acc + o.total, 0)
+    const totalPedidos = orders.length
+    const ticketMedio = totalPedidos > 0 ? totalGeral / totalPedidos : 0
+
+    res.json({
+      totalGeral,
+      totalPedidos,
+      ticketMedio,
+      byMonth: Object.values(byMonth),
+      orders: orders.reverse().map(o => ({
+        id: o.id,
+        total: o.total,
+        criadoEm: o.criadoEm,
+        itemCount: o.items.length,
+        arquivado: o.arquivado,
+      })),
+    })
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: 'Erro ao buscar faturamento' })
+  }
+}
+
+module.exports = { getAll, create, updateStatus, arquivarOne, arquivarAll, getRevenue }

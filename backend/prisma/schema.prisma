@@ -31,7 +31,8 @@ model Order {
   items     OrderItem[]
   total     Float
   frete     Float?
-  status    String      @default("pending")
+  status    String      @default("completed")
+  arquivado Boolean     @default(false)
   criadoEm DateTime    @default(now())
 }
 
