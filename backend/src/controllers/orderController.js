@@ -23,6 +23,7 @@ const getAll = async (req, res) => {
 const create = async (req, res) => {
   try {
     const { items, total, frete } = req.body
+    const userId = req.userId || null // vem do userAuthMiddleware
 
     if (!items || !Array.isArray(items) || items.length === 0) {
       return res.status(400).json({ error: 'Itens inválidos' })
@@ -34,6 +35,7 @@ const create = async (req, res) => {
         frete: frete ?? null,
         status: 'completed',
         arquivado: false,
+        userId,
         items: {
           create: items.map(item => ({
             name: item.name,

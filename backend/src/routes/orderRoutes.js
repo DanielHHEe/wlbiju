@@ -1,10 +1,11 @@
 const express = require('express')
 const { getAll, create, updateStatus, arquivarOne, arquivarAll, getRevenue } = require('../controllers/orderController')
 const authMiddleware = require('../middlewares/authMiddleware')
+const userAuthMiddleware = require('../middlewares/userAuthMiddleware')
 const router = express.Router()
 
-// Rota pública — loja do cliente finaliza compra
-router.post('/public', create)
+// Rota pública protegida por auth do usuário
+router.post('/public', userAuthMiddleware, create)
 
 // Rotas protegidas — painel admin
 router.use(authMiddleware)
