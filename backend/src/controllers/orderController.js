@@ -140,7 +140,7 @@ const getRevenue = async (req, res) => {
       totalPedidos,
       ticketMedio,
       byMonth: Object.values(byMonth),
-      orders: orders.reverse().map(o => ({
+      orders: [...orders].reverse().slice(0, 10).map(o => ({
         id: o.id,
         total: o.total,
         criadoEm: o.criadoEm,
