@@ -4,12 +4,14 @@ const { PrismaPg } = require('@prisma/adapter-pg')
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL })
 const prisma = new PrismaClient({ adapter })
 
-// Listar pedidos NÃO arquivados (tela operacional)
 const getAll = async (req, res) => {
   try {
     const orders = await prisma.order.findMany({
       where: { arquivado: false },
-      include: { items: true },
+      include: {
+        items: true,
+        user: { select: { id: true, name: true, email: true, telefone: true } },
+      },
       orderBy: { criadoEm: 'desc' },
     })
     res.json(orders)
@@ -19,11 +21,10 @@ const getAll = async (req, res) => {
   }
 }
 
-// Criar pedido (rota pública)
 const create = async (req, res) => {
   try {
     const { items, total, frete } = req.body
-    const userId = req.userId || null // vem do userAuthMiddleware
+    const userId = req.userId || null
 
     if (!items || !Array.isArray(items) || items.length === 0) {
       return res.status(400).json({ error: 'Itens inválidos' })
@@ -47,7 +48,10 @@ const create = async (req, res) => {
           })),
         },
       },
-      include: { items: true },
+      include: {
+        items: true,
+        user: { select: { id: true, name: true, email: true, telefone: true } },
+      },
     })
 
     res.status(201).json(order)
@@ -70,7 +74,10 @@ const updateStatus = async (req, res) => {
     const order = await prisma.order.update({
       where: { id },
       data: { status },
-      include: { items: true },
+      include: {
+        items: true,
+        user: { select: { id: true, name: true, email: true, telefone: true } },
+      },
     })
 
     res.json(order)
@@ -80,7 +87,6 @@ const updateStatus = async (req, res) => {
   }
 }
 
-// Arquivar um pedido específico
 const arquivarOne = async (req, res) => {
   try {
     const { id } = req.params
@@ -95,7 +101,6 @@ const arquivarOne = async (req, res) => {
   }
 }
 
-// Arquivar todos os pedidos
 const arquivarAll = async (req, res) => {
   try {
     await prisma.order.updateMany({
@@ -109,7 +114,6 @@ const arquivarAll = async (req, res) => {
   }
 }
 
-// Faturamento — busca TODOS (arquivados ou não)
 const getRevenue = async (req, res) => {
   try {
     const orders = await prisma.order.findMany({
