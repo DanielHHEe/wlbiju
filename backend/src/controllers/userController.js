@@ -8,9 +8,9 @@ const prisma = new PrismaClient({ adapter })
 
 const register = async (req, res) => {
   try {
-    const { name, email, password } = req.body
+    const { name, email, password, telefone } = req.body
 
-    if (!name || !email || !password)
+    if (!name || !email || !password || !telefone)
       return res.status(400).json({ error: 'Preencha todos os campos.' })
 
     if (password.length < 6)
@@ -22,14 +22,18 @@ const register = async (req, res) => {
 
     const hash = await bcrypt.hash(password, 10)
     const user = await prisma.user.create({
-      data: { name, email, password: hash },
+      data: { name, email, password: hash, telefone },
     })
 
-    const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, { expiresIn: '7d' })
+    const token = jwt.sign(
+      { id: user.id, email: user.email },
+      process.env.JWT_SECRET,
+      { expiresIn: '7d' }
+    )
 
     res.status(201).json({
       token,
-      user: { id: user.id, name: user.name, email: user.email },
+      user: { id: user.id, name: user.name, email: user.email, telefone: user.telefone },
     })
   } catch (err) {
     console.error(err)
@@ -52,11 +56,15 @@ const login = async (req, res) => {
     if (!valid)
       return res.status(401).json({ error: 'E-mail ou senha incorretos.' })
 
-    const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, { expiresIn: '7d' })
+    const token = jwt.sign(
+      { id: user.id, email: user.email },
+      process.env.JWT_SECRET,
+      { expiresIn: '7d' }
+    )
 
     res.json({
       token,
-      user: { id: user.id, name: user.name, email: user.email },
+      user: { id: user.id, name: user.name, email: user.email, telefone: user.telefone },
     })
   } catch (err) {
     console.error(err)
@@ -68,7 +76,7 @@ const me = async (req, res) => {
   try {
     const user = await prisma.user.findUnique({
       where: { id: req.userId },
-      select: { id: true, name: true, email: true, createdAt: true },
+      select: { id: true, name: true, email: true, telefone: true, createdAt: true },
     })
     if (!user) return res.status(404).json({ error: 'Usuário não encontrado.' })
     res.json(user)
