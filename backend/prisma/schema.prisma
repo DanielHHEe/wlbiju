@@ -32,6 +32,12 @@ model User {
   email     String   @unique
   password  String
   telefone  String?
+  cep       String?
+  rua       String?
+  numero    String?
+  bairro    String?
+  cidade    String?
+  estado    String?
   createdAt DateTime @default(now())
   orders    Order[]
 }

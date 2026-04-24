@@ -64,7 +64,11 @@ const login = async (req, res) => {
 
     res.json({
       token,
-      user: { id: user.id, name: user.name, email: user.email, telefone: user.telefone },
+      user: {
+        id: user.id, name: user.name, email: user.email, telefone: user.telefone,
+        cep: user.cep, rua: user.rua, numero: user.numero,
+        bairro: user.bairro, cidade: user.cidade, estado: user.estado,
+      },
     })
   } catch (err) {
     console.error(err)
@@ -76,7 +80,12 @@ const me = async (req, res) => {
   try {
     const user = await prisma.user.findUnique({
       where: { id: req.userId },
-      select: { id: true, name: true, email: true, telefone: true, createdAt: true },
+      select: {
+        id: true, name: true, email: true, telefone: true,
+        cep: true, rua: true, numero: true,
+        bairro: true, cidade: true, estado: true,
+        createdAt: true,
+      },
     })
     if (!user) return res.status(404).json({ error: 'Usuário não encontrado.' })
     res.json(user)
@@ -85,4 +94,28 @@ const me = async (req, res) => {
   }
 }
 
-module.exports = { register, login, me }
+const updateAddress = async (req, res) => {
+  try {
+    const { cep, rua, numero, bairro, cidade, estado } = req.body
+
+    if (!cep || !rua || !numero || !bairro || !cidade || !estado)
+      return res.status(400).json({ error: 'Preencha todos os campos do endereço.' })
+
+    const user = await prisma.user.update({
+      where: { id: req.userId },
+      data: { cep, rua, numero, bairro, cidade, estado },
+      select: {
+        id: true, name: true, email: true, telefone: true,
+        cep: true, rua: true, numero: true,
+        bairro: true, cidade: true, estado: true,
+      },
+    })
+
+    res.json({ user })
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: 'Erro ao atualizar endereço.' })
+  }
+}
+
+module.exports = { register, login, me, updateAddress }
