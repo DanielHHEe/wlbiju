@@ -4,6 +4,8 @@ const { PrismaPg } = require('@prisma/adapter-pg')
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL })
 const prisma = new PrismaClient({ adapter })
 
+const DELIVERY_STATUS = ['dispatched', 'at_branch', 'out_for_delivery', 'delivered']
+
 const getAll = async (req, res) => {
   try {
     const orders = await prisma.order.findMany({
@@ -35,6 +37,7 @@ const create = async (req, res) => {
         total,
         frete: frete ?? null,
         status: 'completed',
+        deliveryStatus: 'dispatched',
         arquivado: false,
         userId,
         items: {
@@ -84,6 +87,47 @@ const updateStatus = async (req, res) => {
   } catch (err) {
     console.error(err)
     res.status(500).json({ error: 'Erro ao atualizar status' })
+  }
+}
+
+// Atualiza status de entrega (admin)
+const updateDeliveryStatus = async (req, res) => {
+  try {
+    const { id } = req.params
+    const { deliveryStatus } = req.body
+
+    if (!DELIVERY_STATUS.includes(deliveryStatus)) {
+      return res.status(400).json({ error: 'Status de entrega inválido' })
+    }
+
+    const order = await prisma.order.update({
+      where: { id },
+      data: { deliveryStatus },
+      include: {
+        items: true,
+        user: { select: { id: true, name: true, email: true, telefone: true } },
+      },
+    })
+
+    res.json(order)
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: 'Erro ao atualizar status de entrega' })
+  }
+}
+
+// Busca pedidos do usuário logado
+const getMyOrders = async (req, res) => {
+  try {
+    const orders = await prisma.order.findMany({
+      where: { userId: req.userId },
+      include: { items: true },
+      orderBy: { criadoEm: 'desc' },
+    })
+    res.json(orders)
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: 'Erro ao buscar seus pedidos' })
   }
 }
 
@@ -154,4 +198,7 @@ const getRevenue = async (req, res) => {
   }
 }
 
-module.exports = { getAll, create, updateStatus, arquivarOne, arquivarAll, getRevenue }
+module.exports = {
+  getAll, create, updateStatus, updateDeliveryStatus,
+  getMyOrders, arquivarOne, arquivarAll, getRevenue
+}

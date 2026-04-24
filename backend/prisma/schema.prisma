@@ -37,15 +37,16 @@ model User {
 }
 
 model Order {
-  id        String      @id @default(uuid())
-  items     OrderItem[]
-  total     Float
-  frete     Float?
-  status    String      @default("completed")
-  arquivado Boolean     @default(false)
-  criadoEm DateTime    @default(now())
-  userId    String?
-  user      User?       @relation(fields: [userId], references: [id])
+  id             String      @id @default(uuid())
+  items          OrderItem[]
+  total          Float
+  frete          Float?
+  status         String      @default("completed")
+  deliveryStatus String      @default("dispatched")
+  arquivado      Boolean     @default(false)
+  criadoEm      DateTime    @default(now())
+  userId         String?
+  user           User?       @relation(fields: [userId], references: [id])
 }
 
 model OrderItem {
