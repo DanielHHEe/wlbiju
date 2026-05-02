@@ -4,7 +4,7 @@ const { PrismaPg } = require('@prisma/adapter-pg')
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL })
 const prisma = new PrismaClient({ adapter })
 
-const DELIVERY_STATUS = ['dispatched', 'at_branch', 'out_for_delivery', 'delivered']
+const DELIVERY_STATUS = ['in_preparation', 'dispatched', 'at_branch', 'out_for_delivery', 'delivered']
 
 const getAll = async (req, res) => {
   try {
@@ -37,7 +37,7 @@ const create = async (req, res) => {
         total,
         frete: frete ?? null,
         status: 'completed',
-        deliveryStatus: 'dispatched',
+        deliveryStatus: 'in_preparation',
         arquivado: false,
         userId,
         items: {
@@ -90,7 +90,6 @@ const updateStatus = async (req, res) => {
   }
 }
 
-// Atualiza status de entrega (admin)
 const updateDeliveryStatus = async (req, res) => {
   try {
     const { id } = req.params
@@ -116,7 +115,6 @@ const updateDeliveryStatus = async (req, res) => {
   }
 }
 
-// Busca pedidos do usuário logado
 const getMyOrders = async (req, res) => {
   try {
     const orders = await prisma.order.findMany({
