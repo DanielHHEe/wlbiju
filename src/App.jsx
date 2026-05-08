@@ -8,6 +8,7 @@ import Dashboard from './pages/admin/Dashboard'
 import Products from './pages/admin/Products'
 import Orders from './pages/admin/Orders'
 import Stock from './pages/admin/Stock'
+import Revenue from './pages/admin/Revenue'
 
 export default function App() {
   return (
@@ -34,6 +35,11 @@ export default function App() {
           <Route path="/admin/stock" element={
             <PrivateRoute>
               <AdminLayout><Stock /></AdminLayout>
+            </PrivateRoute>
+          } />
+          <Route path="/admin/revenue" element={
+            <PrivateRoute>
+              <AdminLayout><Revenue /></AdminLayout>
             </PrivateRoute>
           } />
           <Route path="*" element={<Navigate to="/login" replace />} />

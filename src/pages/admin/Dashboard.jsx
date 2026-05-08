@@ -13,19 +13,27 @@ export default function Dashboard() {
   const { admin } = useAuth()
   const navigate = useNavigate()
   const [products, setProducts] = useState([])
+  const [orders, setOrders] = useState([])
   const [loading, setLoading] = useState(true)
 
   const hour = new Date().getHours()
   const greeting = hour < 12 ? 'Bom dia' : hour < 18 ? 'Boa tarde' : 'Boa noite'
 
   useEffect(() => {
-    api.get('/products')
-      .then(({ data }) => setProducts(data))
+    Promise.all([
+      api.get('/products'),
+      api.get('/orders'),
+    ])
+      .then(([prodRes, ordRes]) => {
+        setProducts(prodRes.data)
+        setOrders(ordRes.data)
+      })
       .catch(() => {})
       .finally(() => setLoading(false))
   }, [])
 
   const totalProdutos = products.length
+  const totalPedidos = orders.length
   const estoquesBaixos = products.filter(p => p.stock < 5).length
   const receita = products.reduce((acc, p) => acc + (p.price * p.stock), 0)
 
@@ -38,8 +46,8 @@ export default function Dashboard() {
     },
     {
       label: 'Pedidos',
-      value: '0',
-      sub: 'Total realizados',
+      value: loading ? '...' : totalPedidos,
+      sub: 'Pendentes de arquivar',
       icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2',
     },
     {
